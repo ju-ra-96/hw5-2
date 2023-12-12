@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather Widget</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    text-align: center;
+  }
+
+  #weather-widget {
+    margin-top: 50px;
+  }
+
+  #weather-content {
+    font-size: 1.2em;
+    margin: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+
+  #weather-widget p {
+    margin: 10px 0;
+  }
+
+  .weather-icon {
+    font-size: 2em;
+  }
+
+  .weather-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .weather-info div {
+    margin: 5px;
+  }
+
+  .weather-conditions {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div id="weather-widget">
+  <h1>Current Weather</h1>
+  <div id="weather-content">
+    <!-- Weather data will be loaded here by JavaScript -->
+  </div>
+  <noscript>
+    <p>Current Weather Conditions Unavailable</p>
+  </noscript>
+</div>
+
+<script>
+  // JavaScript code here
+  document.addEventListener('DOMContentLoaded', function() {
+    const weatherWidget = document.getElementById('weather-content');
+  
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=32.7157&longitude=-117.1647&hourly=temperature_2m,weathercode,wind_speed_10m,relative_humidity_2m')
+      .then(response => response.json())
+      .then(data => {
+        const currentTemperature = data.hourly.temperature_2m[0];
+        const weatherCode = data.hourly.weathercode[0]; // Weather condition code
+        const windSpeed = data.hourly.wind_speed_10m[0];
+        const humidity = data.hourly.relative_humidity_2m[0];
+  
+        // Mapping weatherCode to icon here...
+  
+        weatherWidget.innerHTML = `
+          <div class="weather-conditions">
+            <span class="weather-icon">☀️</span> <!-- Placeholder icon -->
+            <span>Temperature: ${currentTemperature}°C</span>
+          </div>
+          <div class="weather-info">
+            <div>Wind Speed: ${windSpeed} m/s</div>
+            <div>Humidity: ${humidity}%</div>
+          </div>
+        `;
+      })
+      .catch(error => {
+        weatherWidget.innerHTML = '<p>Current Weather Conditions Unavailable</p>';
+      });
+  });
+</script>
+</body>
+</html>
